@@ -43,6 +43,7 @@ The estimated parameters in the model \eqn{x_{i} = \alpha + \beta z_k + \Gamma v
  \item{number_parameters}{The number of parameters estimated in the EM algorithm.}
  \item{AIC}{The AIC value (\code{-2logL + 2number_parameters}).}
  \item{BIC}{The BIC value (\code{-2logL + number_parameters*log(n)}), where n is the number of observations.}
+ \item{starting_values}{A list of starting values for parameters used in the EM algorithm.}
 }
 \description{
 This function is used to obtain the Maximum Likelihood Estimates (MLE) using the EM algorithm for one-level multivariate data.
@@ -52,7 +53,6 @@ This function is used to obtain the Maximum Likelihood Estimates (MLE) using the
 }
 \examples{
 ##example for data without covariates.
-library(graphics)
 data(faithful)
 res <- mult.em_1level(faithful,K=2,steps = 10,var_fun = 1)
 

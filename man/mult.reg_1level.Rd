@@ -46,17 +46,26 @@ The best estimated result (with the smallest AIC value) in the model (Zhang and 
  \item{AIC}{The AIC value (\code{-2logL + 2number_parameters}).}
  \item{BIC}{The BIC value (\code{-2logL + number_parameters*log(n)}), where n is the number of observations.}
  \item{aic_data}{All AIC values in each run.}
+ \item{Starting_values}{Lists of starting values for parameters used in each \code{num_runs}.
+                     It allows reproduction of the best result (obtained from \link{mult.reg_1level}) in a single run
+                     using \link{mult.em_1level} by setting \code{start} equal to the list of starting values
+                     that were used to obtain the best result in \link{mult.reg_1level}.}
 }
 \description{
-Run multiple times the function \link{mult.em_1level} for fitting Zhang and Einbeck's (2024) multivariate response models with one-level random effect,
+This wrapper function runs multiple times the function \link{mult.em_1level} for fitting Zhang and Einbeck's (2024) multivariate response models with one-level random effect,
              and select the best results with the smallest AIC value.
 }
 \examples{
 \donttest{
 ##run the mult.em_1level() multiple times and select the best results with the smallest AIC value
+set.seed(7)
 results <- mult.reg_1level(fetal_covid_data[,c(1:5)],v=fetal_covid_data$status_bi,
-K=3, num_runs = 5,
-steps = 20, var_fun = 2, option = 1)
+K=3, num_runs = 5,steps = 20, var_fun = 2, option = 1)
+##Reproduce the best result: the best result is the 5th run in the above example.
+rep_best_result <- mult.em_1level(fetal_covid_data[,c(1:5)],
+v=fetal_covid_data$status_bi,
+K=3, steps = 20, var_fun = 2, option = 1,
+start = results$Starting_values[[5]])
 }
 }
 \references{

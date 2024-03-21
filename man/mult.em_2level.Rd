@@ -39,6 +39,7 @@ The estimated parameters in the model \eqn{x_{ij} = \alpha + \beta z_k + \Gamma 
  \item{disparity}{The disparity (\code{-2logL}) of the fitted model.}
  \item{number_parameters}{The number of parameters estimated in the EM algorithm.}
  \item{AIC}{The AIC value (\code{-2logL + 2number_parameters}).}
+ \item{starting_values}{A list of starting values for parameters used in the EM algorithm.}
 }
 \description{
 This function extends the one-level version \link{mult.em_1level},

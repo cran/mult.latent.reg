@@ -42,16 +42,25 @@ The best estimated result (with the smallest AIC value) in the model \eqn{x_{ij}
  \item{number_parameters}{The number of parameters estimated in the EM algorithm.}
  \item{AIC}{The AIC value (\code{-2logL + 2number_parameters}).}
  \item{aic_data}{All AIC values in each run.}
+ \item{Starting_values}{Lists of starting values for parameters used in each \code{num_runs}.
+                     It allows reproduction of the best result (obtained from \link{mult.reg_2level}) in a single run
+                     using \link{mult.em_2level} by setting \code{start} equal to the list of starting values
+                     that were used to obtain the best result in \link{mult.reg_2level}.}
 }
 \description{
-Run multiple times the function \link{mult.em_2level} for fitting Zhang et al.'s (2023) multivariate response models with two-level random effect,
+This wrapper function runs multiple times the function \link{mult.em_2level} for fitting Zhang et al.'s (2023) multivariate response models with two-level random effect,
               and select the best results with the smallest AIC value.
 }
 \examples{
 \donttest{
 ##run the mult.em_2level() multiple times and select the best results with the smallest AIC value
+set.seed(7)
 results <- mult.reg_2level(trading_data, K=4, steps = 10, num_runs = 5,
-var_fun = 2, option = 1)
+                           var_fun = 2, option = 1)
+## Reproduce the best result: the best result is the 2nd run in the above example.
+rep_best_result <- mult.em_2level(trading_data, K=4, steps = 10,
+var_fun = 2, option = 1,
+start = results$Starting_values[[2]])
 }
 }
 \references{

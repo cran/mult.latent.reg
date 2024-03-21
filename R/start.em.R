@@ -443,30 +443,48 @@ start_em <- function(data, v, p, alpha, beta, z, gamma, sigma, steps = 20, K = 2
       }
 
       } else {
-          if(var_fun == 1){
-            res_1 <- em_covs.start(data, v, K, steps = 5, var_fun = 1)
-            if(missing(p)){p <- res_1$p}
-            if(missing(alpha)){alpha <- res_1$alpha}
-            if(missing(beta)){beta <- res_1$beta_hat}
-            if(missing(z)){z  <- res_1$z_hat}
-            if(missing(sigma)){
-              sigma <- res_1$sigma
+        if(var_fun == 1){
+          res_1 <- em_covs.start(data, v, K, steps = 5, var_fun = 1)
+          res_1_p <- res_1$p[1]
+          if (is.na(res_1_p)) {
+            repeat {
+              res_1 <- em_covs.start(data, v, K, steps = 5, var_fun = 1)
+              if (!anyNA(res_1_p)) {
+                break
               }
-            if(missing(gamma)){gamma <- res_1$gamma}
+            }
           }
+          if(missing(p)){p <- res_1$p}
+          if(missing(alpha)){alpha <- res_1$alpha}
+          if(missing(beta)){beta <- res_1$beta}
+          if(missing(z)){z  <- res_1$z}
+          if(missing(sigma)){
+            sigma <- res_1$sigma
+          }
+          if(missing(gamma)){gamma <- res_1$gamma}
+        }
         if(var_fun == 2){
           res_2 <- em_covs.start(data, v, K, steps = 5, var_fun = 1)
+          res_2_p <- res_2$p[1]
+          if (is.na(res_2_p)) {
+            repeat {
+              res_2 <- em_covs.start(data, v, K, steps = 5, var_fun = 1)
+              if (!anyNA(res_2_p)) {
+                break
+              }
+            }
+          }
           if(missing(p)){p <- res_2$p}
           if(missing(alpha)){alpha <- res_2$alpha}
-          if(missing(beta)){beta <- res_2$beta_hat}
-          if(missing(z)){z  <- res_2$z_hat}
+          if(missing(beta)){beta <- res_2$beta}
+          if(missing(z)){z  <- res_2$z}
           if(missing(sigma)){
             s_n <- res_2$sigma
             sigma <- list()
             for (k in 1:K) {
               sigma[[k]] <- s_n
             }
-            }
+          }
           if(missing(gamma)){gamma <- res_2$gamma}
         }
         if(var_fun == 3){

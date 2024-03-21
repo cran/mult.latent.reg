@@ -1,6 +1,6 @@
 #' @title Selecting the best results for multivariate one level model
 #' @name mult.reg_1level
-#' @description Run multiple times the function \link{mult.em_1level} for fitting Zhang and Einbeck's (2024) multivariate response models with one-level random effect,
+#' @description This wrapper function runs multiple times the function \link{mult.em_1level} for fitting Zhang and Einbeck's (2024) multivariate response models with one-level random effect,
 #'              and select the best results with the smallest AIC value.
 #' @param data A data set object; we denote the dimension of a data set to be \eqn{m}.
 #' @param v Covariate(s).
@@ -35,15 +35,24 @@
 #'  \item{AIC}{The AIC value (\code{-2logL + 2number_parameters}).}
 #'  \item{BIC}{The BIC value (\code{-2logL + number_parameters*log(n)}), where n is the number of observations.}
 #'  \item{aic_data}{All AIC values in each run.}
+#'  \item{Starting_values}{Lists of starting values for parameters used in each \code{num_runs}.
+#'                      It allows reproduction of the best result (obtained from \link{mult.reg_1level}) in a single run
+#'                      using \link{mult.em_1level} by setting \code{start} equal to the list of starting values
+#'                      that were used to obtain the best result in \link{mult.reg_1level}.}
 #'
 #' @seealso \code{\link{mult.em_1level}}.
 #' @references Zhang, Y. and Einbeck J.  (2024). A Versatile Model for Clustered and Highly Correlated Multivariate Data. J Stat Theory Pract 18(5).\doi{10.1007/s42519-023-00357-0}
 #' @examples
 #' \donttest{
 #' ##run the mult.em_1level() multiple times and select the best results with the smallest AIC value
+#' set.seed(7)
 #' results <- mult.reg_1level(fetal_covid_data[,c(1:5)],v=fetal_covid_data$status_bi,
-#' K=3, num_runs = 5,
-#' steps = 20, var_fun = 2, option = 1)
+#' K=3, num_runs = 5,steps = 20, var_fun = 2, option = 1)
+#' ##Reproduce the best result: the best result is the 5th run in the above example.
+#' rep_best_result <- mult.em_1level(fetal_covid_data[,c(1:5)],
+#' v=fetal_covid_data$status_bi,
+#' K=3, steps = 20, var_fun = 2, option = 1,
+#' start = results$Starting_values[[5]])
 #' }
 #' @import "mvtnorm"
 #' @import "stats"
@@ -58,17 +67,20 @@ mult.reg_1level <- function(data, v, start, K = 2, steps = 10, num_runs = 10, va
 
   results <- list()
   res_aic <- numeric(num_runs)
+  start_values <- list()
 
   for (i in 1: num_runs) {
     results[[i]] <- mult.em_1level(data=data, v=v, K=K, start=start, steps=steps, var_fun = var_fun, option = option)
     aic <- results[[i]]$AIC
     res_aic[i] <- aic
+    start_values[[i]] <- results[[i]]$starting_values
   }
 
   min_aic_index <- which.min(res_aic)
   best_result <- results[[min_aic_index]]
   aic_data <- data.frame(Index = seq(1,num_runs), AIC = res_aic)
 
-  return(list(best_result = best_result, aic_data = aic_data))
+  return(list(best_result = best_result, aic_data = aic_data, Starting_values = start_values))
 }
+
 

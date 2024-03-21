@@ -35,11 +35,11 @@
 #'  \item{number_parameters}{The number of parameters estimated in the EM algorithm.}
 #'  \item{AIC}{The AIC value (\code{-2logL + 2number_parameters}).}
 #'  \item{BIC}{The BIC value (\code{-2logL + number_parameters*log(n)}), where n is the number of observations.}
+#'  \item{starting_values}{A list of starting values for parameters used in the EM algorithm.}
 #' @seealso \code{\link{mult.reg_1level}}.
 #' @references Zhang, Y. and Einbeck, J. (2024). A Versatile Model for Clustered and Highly Correlated Multivariate Data. J Stat Theory Pract 18(5).\doi{10.1007/s42519-023-00357-0}
 #' @examples
 #' ##example for data without covariates.
-#' library(graphics)
 #' data(faithful)
 #' res <- mult.em_1level(faithful,K=2,steps = 10,var_fun = 1)
 #'
@@ -690,7 +690,7 @@ em_fun <- function(data, K, start, steps, var_fun, option){
   ##"projection" = x_proj
   fit<- list("p"=p, "alpha"=alpha,"z"=z_hat,"beta"=beta_hat ,"sigma"=sigma,
              "W" =W, "loglikelihood"=loglik, "disparity"=-2*loglik, "number_parameters"=num_parameters,
-             "AIC"=-2*loglik+2*num_parameters, "BIC"= -2*loglik + num_parameters*log(length(data[,1])) )
+             "AIC"=-2*loglik+2*num_parameters, "BIC"= -2*loglik + num_parameters*log(length(data[,1])) , "starting_values" = start)
   class(fit) <- "EM"
   return(fit)
 }
@@ -1536,7 +1536,10 @@ em_covs <-  function(data, v, K, start, steps, var_fun, option){
     num_parameters <- (K-1) + K + m + m + m*K + m*q
   }
 
-  fit<- list("p"=p, "alpha"=alpha, "z"=z_hat,"beta"=beta_hat, "gamma"=gamma,"sigma"=sigma,  "W" =W, "loglikelihood"=loglik, "disparity"=-2*loglik, "number_parameters"=num_parameters, "AIC"=-2*loglik+2*num_parameters,"BIC"= -2*loglik + num_parameters*log(length(data[,1])))
+  fit<- list("p"=p, "alpha"=alpha, "z"=z_hat,"beta"=beta_hat, "gamma"=gamma,"sigma"=sigma,
+             "W" =W, "loglikelihood"=loglik, "disparity"=-2*loglik, "number_parameters"=num_parameters,
+             "AIC"=-2*loglik+2*num_parameters,"BIC"= -2*loglik + num_parameters*log(length(data[,1])),
+             "starting_values" = start)
 
   class(fit) <- "EM"
   return(fit)

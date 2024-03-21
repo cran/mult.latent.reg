@@ -36,6 +36,7 @@
 #'  \item{disparity}{The disparity (\code{-2logL}) of the fitted model.}
 #'  \item{number_parameters}{The number of parameters estimated in the EM algorithm.}
 #'  \item{AIC}{The AIC value (\code{-2logL + 2number_parameters}).}
+#'  \item{starting_values}{A list of starting values for parameters used in the EM algorithm.}
 #' @seealso \code{\link{mult.reg_2level}}.
 #'
 #' @examples
@@ -695,7 +696,7 @@ em_2level_fun <- function(data, K, start, steps, var_fun, option){
 
   fit<- list("p"=p, "alpha"=alpha,"z"=z_hat,"beta"=beta_hat ,"sigma"=sigma,
              "W" =W, "loglikelihood"=loglik, "disparity"=-2*loglik, "number_parameters"=num_parameters,
-             "AIC"=-2*loglik+2*num_parameters)
+             "AIC"=-2*loglik+2*num_parameters, "starting_values" = start)
 
   class(fit) <- "EM"
 
@@ -1133,7 +1134,7 @@ em_2level_covs <- function(data, v, K, start, steps, var_fun, option){
 
   fit<- list("p"=p, "alpha"=alpha,"z"=z_hat,"beta"=beta_hat ,"sigma"=sigma,"gamma"=gamma,
              "W" =W, "loglikelihood"=loglik, "disparity"=-2*loglik, "number_parameters"=num_parameters,
-             "AIC"=-2*loglik+2*num_parameters)
+             "AIC"=-2*loglik+2*num_parameters, "starting_values" = start)
 
   class(fit) <- "EM"
 
