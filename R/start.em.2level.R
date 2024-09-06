@@ -798,7 +798,7 @@ mstep_mlevel_covS <- function(data, v, W, alpha, beta, gamma, var_fun){
   p <- apply(W,2,sum)/nr
 
   counter <- 0
-  while (counter <= 5) {
+  while (counter <= 20) {
     x_i <- data.frame()
     X <- split(data_numeric, data_factor)
     for (i in X) {
@@ -922,12 +922,11 @@ mstep_mlevel_covS <- function(data, v, W, alpha, beta, gamma, var_fun){
       beta_v_ij[[i]] <- as.matrix(beta)%*%as.matrix(v[i,])
     }
 
-    beta_v_i <-  vector("list", length = nr)
     B <- split(beta_v_ij, data_factor)
-    for (b in B) {
-      for (i in 1:nr) {
-        beta_v_i[[i]] <-   Reduce("+", b)
-      }
+    beta_v_i <- vector("list", length = length(B))
+    for (i in seq_along(B)) {
+      matrices_list <- B[[i]]
+      beta_v_i[[i]] <- Reduce("+", matrices_list)
     }
 
     current_gamma <- vector("list", length = nr)
@@ -953,6 +952,13 @@ mstep_mlevel_covS <- function(data, v, W, alpha, beta, gamma, var_fun){
 
   #######sigma
   if(var_fun == 1){
+
+    phi <- data.frame()
+    for (i in 1:n) {
+      phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+      phi <- rbind(phi,phi_current)
+    }
+
     diff<-matrix(0,n, K)
     sigma <- c()
     for (l in 1:m) {
@@ -974,6 +980,14 @@ mstep_mlevel_covS <- function(data, v, W, alpha, beta, gamma, var_fun){
   }
 
   if(var_fun == 2){
+
+    phi <- data.frame()
+    for (i in 1:n) {
+      phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+      phi <- rbind(phi,phi_current)
+    }
+
+
     diff<- matrix(0,n,m)
     sigma <- c()
     for (k in 1:K) {

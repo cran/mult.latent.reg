@@ -1,4 +1,4 @@
-#' @name mult.latent.reg
+#' @name {mult.latent.reg}
 #' @docType package
 #' @title Regression and Clustering in Multivariate Response Scenarios
 #' @description

@@ -890,6 +890,13 @@ mstep_covs <- function(data, v, W, alpha, beta, gamma, var_fun){
 
         counter = counter+1
       }
+
+      phi <- data.frame() ##newly added
+      for (i in 1:n) {
+        phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+        phi <- rbind(phi,phi_current)
+      }
+
       diff<-matrix(0,n, K)
       sigma <- c()
       for (j in 1:m) {
@@ -997,6 +1004,13 @@ mstep_covs <- function(data, v, W, alpha, beta, gamma, var_fun){
 
         counter = counter+1
       }
+
+      phi <- data.frame()
+      for (i in 1:n) {
+        phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+        phi <- rbind(phi,phi_current)
+      }
+
 
       diff<- matrix(0,n,m)
       sigma <- c()
@@ -1110,6 +1124,13 @@ mstep_covs <- function(data, v, W, alpha, beta, gamma, var_fun){
 
         counter = counter+1
       }
+
+      phi <- data.frame()
+      for (i in 1:n) {
+        phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+        phi <- rbind(phi,phi_current)
+      }
+
       current  <- vector("list", length = n)
       Sigma_1 <- vector("list",length = K)
       for (k in 1:K) {
@@ -1218,6 +1239,13 @@ mstep_covs <- function(data, v, W, alpha, beta, gamma, var_fun){
 
         counter = counter+1
       }
+
+      phi <- data.frame()
+      for (i in 1:n) {
+        phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+        phi <- rbind(phi,phi_current)
+      }
+
       current  <- vector("list", length = n)
       sigma <- vector("list",length = K)
       for (k in 1:K) {

@@ -1,10 +1,10 @@
-#' A set of fetal movements data in twins and singletons.
+#' A set of fetal movements data in twins.
 #'
 #' This data was collected for research on the effects of maternal mental health on prenatal movements in twins and singletons (Reissland et al., 2021).
 #' There are two touch movement types of the fetus recorded: self-touch and twin-to-twin touch,
 #' and the mothers’ mental health status was collected on three variables: depression, perceived stress scale and stress.
 #' There are 14 pairs of twins, 11 of the mothers were available for one scan and 3 of them were available for two scans,
-#' i.e. in total there are 34 observations.
+#' i.e. in total there are 34 observations. This dataset contains only the twins data from the original study.
 #'
 #' @docType data
 #'
