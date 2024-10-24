@@ -8,7 +8,7 @@
 
 \item{v}{Covariate(s).}
 
-\item{K}{Number of mixture components, the default is \code{K = 2}. Note that when \code{K = 1}, \code{z} and \code{beta} will be 0.}
+\item{K}{Number of mixture components, the default is \code{K = 2}.}
 
 \item{steps}{Number of iterations, the default is \code{steps = 20}.}
 
@@ -47,7 +47,12 @@ and it is designed to obtain Maximum Likelihood Estimates (MLE) using the EM alg
 e.g. multivariate test scores (such as on numeracy, literacy)  of students nested in different classes or schools.
 The resulting estimates can be applied for clustering or constructing league tables (ranking of observations).
 With the inclusion of covariates, the model allows fitting a multivariate response model for further regression analysis.
-Detailed information about the model used in this function can be found in Zhang et al. (2023).
+Detailed information about the model used in this function can be found in Zhang et al. (2023). Note that this function is designed for multivariate data.
+When the dimension of the data is 1, please use \link[npmlreg]{allvc} as an alternative. A warning message will also be displayed when the input data is a univariate dataset.
+}
+\note{
+It is worth noting that due to the sequential nature of the updates within the M-step,
+     this algorithm can be considered an ECM algorithm.
 }
 \examples{
 \donttest{

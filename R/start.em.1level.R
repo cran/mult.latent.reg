@@ -3,7 +3,8 @@
 #' @description This function is used to obtain the Maximum Likelihood Estimates (MLE) using the EM algorithm for one-level multivariate data.
 #'              The estimates enable users to conduct clustering, ranking, and simultaneous dimension reduction on the multivariate dataset.
 #'              Furthermore, when covariates are included, the function supports the fitting of multivariate response models, expanding its utility for regression analysis.
-#'              The details of the model used in this function can be found in Zhang and Einbeck (2024).
+#'              The details of the model used in this function can be found in Zhang and Einbeck (2024). Note that this function is designed for multivariate data.
+#'              When the dimension of the data is 1, please use \link[npmlreg]{alldist} as an alternative. A warning message will also be displayed when the input data is a univariate dataset.
 #' @param data A data set object; we denote the dimension to be \eqn{m}.
 #' @param v Covariate(s).
 #' @param K Number of mixture components, the default is \code{K = 2}. Note that when \code{K = 1}, \code{z} and \code{beta} will be 0.
@@ -37,6 +38,8 @@
 #'  \item{BIC}{The BIC value (\code{-2logL + number_parameters*log(n)}), where n is the number of observations.}
 #'  \item{starting_values}{A list of starting values for parameters used in the EM algorithm.}
 #' @seealso \code{\link{mult.reg_1level}}.
+#' @note It is worth noting that due to the sequential nature of the updates within the M-step,
+#'      this algorithm can be considered an ECM algorithm.
 #' @references Zhang, Y. and Einbeck, J. (2024). A Versatile Model for Clustered and Highly Correlated Multivariate Data. J Stat Theory Pract 18(5).\doi{10.1007/s42519-023-00357-0}
 #' @examples
 #' ##example for data without covariates.
@@ -82,7 +85,17 @@ library(matrixStats)
 library(mvtnorm)
 library(stats)
 library(utils)
-mult.em_1level <- function(data, v, K, start, steps = 20, var_fun = 2, option = 1){
+mult.em_1level <- function(data, v, K, start, steps = 10, var_fun = 2, option = 1) {
+  #data_numeric <- data[sapply(data, is.numeric)]
+  #m <- length(data_numeric[1, ])
+  data <- as.data.frame(data)
+  m <- length(data[1, ])
+
+  if (m == 1 ) {
+    warning("Please use alldist() available in npmlreg in the case of m = 1")
+    return()
+  }
+
 
   if (missing(v)) {
 
@@ -93,7 +106,10 @@ mult.em_1level <- function(data, v, K, start, steps = 20, var_fun = 2, option = 
 
   }
   return(result)
+
+
 }
+
 
 ###em_fun
 estep<- function(data, p, z, alpha, beta, sigma, var_fun){
@@ -146,7 +162,7 @@ estep<- function(data, p, z, alpha, beta, sigma, var_fun){
   }
 
   if(m == 1){
-    length(data[,1])
+    n <- length(data[,1]) #n is added
     K <- length(p)
     mu <- matrix(0,K,m)
     for (k in 1:K) {
@@ -777,6 +793,7 @@ estep_covs<- function(data, v, p, z, alpha, beta, gamma, sigma, var_fun){
     return(W)
   }
 
+
 }
 
 
@@ -785,8 +802,9 @@ mstep_covs <- function(data, v, W, alpha, beta, gamma, var_fun){
     var_fun <- 2
   }
   m <- length(data[1,])
+  K <- dim(W)[2] ##newly added
 
-  if(m != 1){
+  if(m != 1 && K != 1){
     data <- data.frame(data)
     v <- as.data.frame(v)
     m <- length(data[1,])
@@ -1355,6 +1373,128 @@ mstep_covs <- function(data, v, W, alpha, beta, gamma, var_fun){
   }
 
 
+  if(K == 1){
+    n <- as.numeric(length(data[,1]))
+    W <- matrix(1,n,1)
+    m <- as.numeric(length(data[1,]))
+    data <- data.frame(data)
+    v <- as.data.frame(v)
+    K <- dim(W)[2]
+
+    p <- 1
+    z <- 0
+    beta <- rep(0, m)
+    if(var_fun == 1){
+      p <- 1
+      beta <- rep(0, m)
+      z <- 0
+      counter <- 0
+      while (counter <= 5) {
+        ####alpha
+        phi <- data.frame() ##newly added
+        for (i in 1:n) {
+          phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+          phi <- rbind(phi,phi_current)
+        }
+        alpha <- (1/n)*(apply(data,2,sum)  - apply(phi,2,sum))
+
+        ####gamma
+        v_current <- vector("list", length = n)
+        for (i in 1:n) {
+          v_current[[i]] <- as.numeric(v[i,]) %*% t(as.numeric(v[i,]))
+        }
+        v_sum <- Reduce("+", v_current)
+        v_sum_inverse <- solve(v_sum)
+
+        current_gamma  <- vector("list", length = n)
+        Gamma_1 <- vector("list",length = K)
+        for (k in 1:K) {
+          for (i in 1:n) {
+            current_gamma[[i]] <- W[i,k]*(as.numeric(data[i,] - alpha - beta*z[k])%*%t(as.numeric(v[i,])))
+            sum_matrix <- Reduce("+", current_gamma)
+          }
+          Gamma_1[[k]] <- sum_matrix
+          gamma_new <- Reduce("+", Gamma_1)
+        }
+        gamma <- gamma_new%*%v_sum_inverse
+
+        counter = counter + 1
+      }
+      ####sigma
+      phi <- data.frame() ##newly added
+      for (i in 1:n) {
+        phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+        phi <- rbind(phi,phi_current)
+      }
+
+      diff<-matrix(0,n, K)
+      sigma <- c()
+      for (j in 1:m) {
+        for (k in 1:K) {
+          diff[,k] <- (data[,j] - alpha[j] - phi[,j])^2
+        }
+        sigma[j] <- sqrt(mean(apply(W*diff,1,sum)))
+      }
+    }
+
+    if (var_fun == 3){
+      p <- 1
+      beta <- rep(0, m)
+      z <- 0
+      counter <- 0
+      while (counter <= 5) {
+        ####alpha
+        phi <- data.frame() ##newly added
+        for (i in 1:n) {
+          phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+          phi <- rbind(phi,phi_current)
+        }
+        alpha <- (1/n)*(apply(data,2,sum)  - apply(phi,2,sum))
+
+        ####gamma
+        v_current <- vector("list", length = n)
+        for (i in 1:n) {
+          v_current[[i]] <- as.numeric(v[i,]) %*% t(as.numeric(v[i,]))
+        }
+        v_sum <- Reduce("+", v_current)
+        v_sum_inverse <- solve(v_sum)
+
+        current_gamma  <- vector("list", length = n)
+        Gamma_1 <- vector("list",length = K)
+        for (k in 1:K) {
+          for (i in 1:n) {
+            current_gamma[[i]] <- W[i,k]*(as.numeric(data[i,] - alpha - beta*z[k])%*%t(as.numeric(v[i,])))
+            sum_matrix <- Reduce("+", current_gamma)
+          }
+          Gamma_1[[k]] <- sum_matrix
+          gamma_new <- Reduce("+", Gamma_1)
+        }
+        gamma <- gamma_new%*%v_sum_inverse
+
+        counter = counter + 1
+      }
+      ####sigma
+      phi <- data.frame()
+      for (i in 1:n) {
+        phi_current <- t(gamma %*% t(as.matrix(v[i,])))
+        phi <- rbind(phi,phi_current)
+      }
+
+      current  <- vector("list", length = n)
+      Sigma_1 <- vector("list",length = K)
+      for (k in 1:K) {
+        for (i in 1:n) {
+          current[[i]] <- W[i,k]*t(as.matrix(data[i,] - alpha - beta*z[k] - phi[i,]))%*%(as.matrix(data[i,] - alpha - beta*z[k] - phi[i,]))
+          sum_matrix <- Reduce("+", current)
+        }
+        Sigma_1[[k]] <- sum_matrix/n
+        sigma <- Reduce("+", Sigma_1)
+      }
+    }
+
+  }
+
+
   return(list("p"=p, "z"=z, "alpha"=alpha, "beta"=beta, "gamma"=gamma,"sigma"=sigma))
 }
 
@@ -1435,10 +1575,24 @@ em_covs <-  function(data, v, K, start, steps, var_fun, option){
   }
 
 
+
+
+
   s<-1
   while (s <=steps){
-    W   <- estep_covs(data,v,p,z,alpha,beta,gamma,sigma,var_fun)
+    if(K==1){
+      W <- matrix(1,n,1)
+      p <- 1
+      z <- 0
+      beta <- rep(0, m)
+      fit <- mstep_covs(data, v, W, alpha=alpha, beta=beta, gamma=gamma,var_fun)
+      alpha <- fit$alpha
+      gamma <- fit$gamma
+      sigma <-fit$sigma
 
+    } else {
+
+    W   <- estep_covs(data,v,p,z,alpha,beta,gamma,sigma,var_fun)
     fit <- mstep_covs(data, v, W, alpha=alpha, beta=beta, gamma=gamma,var_fun)
     p   <- fit$p
     z  <- fit$z
@@ -1446,6 +1600,8 @@ em_covs <-  function(data, v, K, start, steps, var_fun, option){
     alpha <- fit$alpha
     gamma <- fit$gamma
     sigma <-fit$sigma
+    }
+
     s<-s+1
     setTxtProgressBar(pb,s)
   }
@@ -1482,6 +1638,11 @@ em_covs <-  function(data, v, K, start, steps, var_fun, option){
   }
 
   if(m == 1 && is.na(beta[1]) != FALSE){
+    beta_hat <- beta
+    z_hat <- z
+  }
+
+  if(K == 1){
     beta_hat <- beta
     z_hat <- z
   }

@@ -1,5 +1,5 @@
-#' @name {mult.latent.reg}
-#' @docType package
+#' @name mult.latent.reg
+#' @aliases package
 #' @title Regression and Clustering in Multivariate Response Scenarios
 #' @description
 #'    This package implements methodology for the estimation of multivariate response models with random effects on one or two levels;

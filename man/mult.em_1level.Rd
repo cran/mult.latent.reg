@@ -49,7 +49,12 @@ The estimated parameters in the model \eqn{x_{i} = \alpha + \beta z_k + \Gamma v
 This function is used to obtain the Maximum Likelihood Estimates (MLE) using the EM algorithm for one-level multivariate data.
              The estimates enable users to conduct clustering, ranking, and simultaneous dimension reduction on the multivariate dataset.
              Furthermore, when covariates are included, the function supports the fitting of multivariate response models, expanding its utility for regression analysis.
-             The details of the model used in this function can be found in Zhang and Einbeck (2024).
+             The details of the model used in this function can be found in Zhang and Einbeck (2024). Note that this function is designed for multivariate data.
+             When the dimension of the data is 1, please use \link[npmlreg]{alldist} as an alternative. A warning message will also be displayed when the input data is a univariate dataset.
+}
+\note{
+It is worth noting that due to the sequential nature of the updates within the M-step,
+     this algorithm can be considered an ECM algorithm.
 }
 \examples{
 ##example for data without covariates.
