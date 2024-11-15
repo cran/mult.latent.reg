@@ -10,9 +10,9 @@
 #'
 #' @format An object of class \code{"data.frame"}
 #' \describe{
-#'  \item{import}{The fetus from the same twins share the same id number.}
-#'  \item{export}{frequency of self-touch for each fetus.}
-#'  \item{country}{frequency of twin-to-twin for each fetus.}
+#'  \item{import}{The country-wise percentages of imports in relation to the overall GDP in each country.}
+#'  \item{export}{The country-wise percentages of exports in relation to the overall GDP in each country.}
+#'  \item{country}{The name of the countries.}
 #' }
 #' @source Trade in Goods and Services. \url{https://data.oecd.org/trade/trade-in-goods-and-services.htm}. Accessed on 2023-05-29.
 #' @keywords datasets

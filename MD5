@@ -1,4 +1,4 @@
-d78390850b7ed9b9435638169a2bf9a0 *DESCRIPTION
+648457126f7101130491cc66aa04e9ec *DESCRIPTION
 8ae0b0069b3925b1390d935f9365d037 *NAMESPACE
 8cb86566ba1768c91bb6651255e44f2e *R/IALS_data.R
 25b6b02ffff968da7ce9b17cc7b88c85 *R/fetal_covid_data.R
@@ -8,7 +8,7 @@ d130a31cdb5f75524a6760fc1218baff *R/mult.latent.reg-package.R
 0de0cead595f9cfcb7e18bc29e73d525 *R/start.em.1level.R
 aaefb6838d26a30b8de5ae49073acadb *R/start.em.2level.R
 70691043293a83bfe7862587326200da *R/start.em.R
-0b9e736ae5a6fcdfc03954853be0c146 *R/trading_data.R
+cac6040783fe07e32350e4cb6136595c *R/trading_data.R
 69fa1a75759a99d41e1178a890e04378 *R/twins_data.R
 aa5e5a2cbfaea3d9b6cdbe378ac48cee *build/partial.rdb
 b1b581b84f6db5af5ba4968be038bb06 *data/IALS_data.rda
@@ -23,5 +23,5 @@ a9685e4d4eddb5a4894068ac10cbff31 *man/mult.em_2level.Rd
 500cf60fc71b04591be8de1cf49d49ec *man/mult.reg_1level.Rd
 aad215eb5256b67b2c34e37b75f55f36 *man/mult.reg_2level.Rd
 587d87f6cbb300e6a6294b822ed863de *man/start_em.Rd
-919f8882c3e1d2edf2a8ed0fb54fe1db *man/trading_data.Rd
+14553083c9da3f8b52b1a0436c261bff *man/trading_data.Rd
 1e6a0d620b349ad1a7a9296dc7eb5b68 *man/twins_data.Rd
