@@ -32,7 +32,7 @@ Link on RG: \url{https://www.researchgate.net/publication/375641972_A_multilevel
 Zhang, Y. and Einbeck, J. (2024). A Versatile Model for Clustered and Highly Correlated Multivariate Data. J Stat Theory Pract 18(5).\doi{10.1007/s42519-023-00357-0}
 }
 \author{
-Yingjuan Zhang <yingjuan.zhang@durham.ac.uk>
+Yingjuan Zhang <yingjuan.zhang7@gmail.com>
 
-Jochen Einbeck
+Jochen Einbeck <jochen.einbeck@durham.ac.uk>
 }

@@ -21,8 +21,8 @@
 #'
 #'License: GPL-3
 #'
-#' @author Yingjuan Zhang <yingjuan.zhang@durham.ac.uk>
-#' @author Jochen Einbeck
+#' @author Yingjuan Zhang <yingjuan.zhang7@gmail.com>
+#' @author Jochen Einbeck <jochen.einbeck@durham.ac.uk>
 #'
 #' @references
 #' Zhang, Y., Einbeck, J., and Drikvandi, R. (2023). A multilevel multivariate response model for data with latent structures.

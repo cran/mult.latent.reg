@@ -13,7 +13,7 @@ An object of class \code{"data.frame"}
 }
 }
 \source{
-Trade in Goods and Services. \url{https://data.oecd.org/trade/trade-in-goods-and-services.htm}. Accessed on 2023-05-29.
+Trade in Goods and Services. \url{https://www.oecd.org/en/data/indicators/trade-in-goods-and-services.html}. Accessed on 2023-05-29.
 }
 \usage{
 data(trading_data)

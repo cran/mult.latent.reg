@@ -14,7 +14,7 @@
 #'  \item{export}{The country-wise percentages of exports in relation to the overall GDP in each country.}
 #'  \item{country}{The name of the countries.}
 #' }
-#' @source Trade in Goods and Services. \url{https://data.oecd.org/trade/trade-in-goods-and-services.htm}. Accessed on 2023-05-29.
+#' @source Trade in Goods and Services. \url{https://www.oecd.org/en/data/indicators/trade-in-goods-and-services.html}. Accessed on 2023-05-29.
 #' @keywords datasets
 #' @examples
 #'
